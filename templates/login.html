@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+{% block content %}
+<section class="auth-shell">
+    <div class="auth-grid">
+        <div class="auth-panel">
+            <p class="eyebrow"><i class="fa-solid fa-lock"></i> Secure Academic Access</p>
+            <h1>Welcome back to AcademicChain</h1>
+            <p class="lead">Access a professional academic platform for secure record management, blockchain anchoring, and verifiable integrity checks.</p>
+
+            <div class="auth-feature-list">
+                <div class="auth-feature">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <div>
+                        <strong>Role-based access</strong>
+                        <div class="lead">Dedicated student and faculty authentication flows.</div>
+                    </div>
+                </div>
+                <div class="auth-feature">
+                    <i class="fa-solid fa-file-shield"></i>
+                    <div>
+                        <strong>Cryptographic protection</strong>
+                        <div class="lead">Academic records are secured with hashing and digital signatures.</div>
+                    </div>
+                </div>
+                <div class="auth-feature">
+                    <i class="fa-solid fa-cubes-stacked"></i>
+                    <div>
+                        <strong>Blockchain traceability</strong>
+                        <div class="lead">Track anchored records and verification outcomes from a single interface.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-card auth-form">
+            <p class="section-eyebrow"><i class="fa-solid fa-right-to-bracket"></i> Sign In</p>
+            <h2>Login to your account</h2>
+            <p class="muted">Use your registered credentials to continue to the dashboard.</p>
+
+            <form method="post" class="form-stack">
+                <div class="field-stack">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" name="email" placeholder="name@example.com" required>
+                </div>
+
+                <div class="field-stack">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <button class="button" type="submit">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                    Login
+                </button>
+            </form>
+
+            <p class="form-footer">New user? <a href="{{ url_for('register') }}">Create an account</a>.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

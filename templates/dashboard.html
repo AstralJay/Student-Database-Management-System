@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+{% set ns = namespace(course_ids=[], student_ids=[], total_marks=0, total_attendance=0) %}
+{% for r in records %}
+    {% if r.course_id and r.course_id not in ns.course_ids %}
+        {% set _ = ns.course_ids.append(r.course_id) %}
+    {% endif %}
+    {% if current_role == 'faculty' and r.student_id and r.student_id not in ns.student_ids %}
+        {% set _ = ns.student_ids.append(r.student_id) %}
+    {% endif %}
+    {% set ns.total_marks = ns.total_marks + (r.marks or 0) %}
+    {% set ns.total_attendance = ns.total_attendance + (r.attendance or 0) %}
+{% endfor %}
+{% set avg_marks = ((ns.total_marks / (records|length)) if records else 0)|round(1) %}
+{% set avg_attendance = ((ns.total_attendance / (records|length)) if records else 0)|round(1) %}
+
+<div class="page-head">
+    <div>
+        <p class="eyebrow"><i class="fa-solid fa-chart-line"></i> Academic Overview</p>
+        <h1>Good morning, {{ current_name }}</h1>
+        <p class="page-subtitle">Here's an overview of your academic records, course activity, and blockchain integrity signals.</p>
+    </div>
+    {% if current_role == 'faculty' %}
+    <a class="button" href="{{ url_for('add_record') }}">
+        <i class="fa-solid fa-plus"></i>
+        Add Academic Record
+    </a>
+    {% endif %}
+</div>
+
+<section class="stats-grid">
+    {% if current_role == 'student' %}
+    <article class="card stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-book-open"></i></div>
+        <span class="stat-value">{{ ns.course_ids|length }}</span>
+        <h3>Total Courses</h3>
+        <span class="stat-trend">Across your current record set</span>
+    </article>
+    <article class="card stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-calendar-days"></i></div>
+        <span class="stat-value">{{ records[0].semester if records else 'N/A' }}</span>
+        <h3>Current Semester</h3>
+        <span class="stat-trend">Latest semester in your records</span>
+    </article>
+    <article class="card stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-square-poll-vertical"></i></div>
+        <span class="stat-value">{{ avg_marks }}</span>
+        <h3>Average Marks</h3>
+        <span class="stat-trend">Calculated from visible entries</span>
+    </article>
+    <article class="card stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-user-clock"></i></div>
+        <span class="stat-value">{{ avg_attendance }}%</span>
+        <h3>Attendance</h3>
+        <span class="stat-trend">Average attendance level</span>
+    </article>
+    <article class="card stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-file-lines"></i></div>
+        <span class="stat-value">{{ records|length }}</span>
+        <h3>Academic Records</h3>
+        <span class="stat-trend">Tracked in the database</span>
+    </article>
+    {% else %}
+    <article class="card stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+        <span class="stat-value">{{ ns.student_ids|length }}</span>
+        <h3>Students</h3>
+        <span class="stat-trend">Unique learners in visible records</span>
+    </article>
+    <article class="card stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
+        <span class="stat-value">{{ ns.course_ids|length }}</span>
+        <h3>Courses</h3>
+        <span class="stat-trend">Courses represented in the dashboard</span>
+    </article>
+    <article class="card stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-pen-ruler"></i></div>
+        <span class="stat-value">{{ records|length }}</span>
+        <h3>Records Updated</h3>
+        <span class="stat-trend">Current record volume</span>
+    </article>
+    <article class="card stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-chart-column"></i></div>
+        <span class="stat-value">{{ avg_marks }}</span>
+        <h3>Average Marks</h3>
+        <span class="stat-trend">Mean score across visible records</span>
+    </article>
+    <article class="card stat-card">
+        <div class="stat-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <span class="stat-value" data-verify-status-inline>Checking</span>
+        <h3>Verification Status</h3>
+        <span class="stat-trend">Live blockchain integrity check</span>
+    </article>
+    {% endif %}
+</section>
+
+<section class="card table-card" id="records-section">
+    <div class="section-header">
+        <div>
+            <p class="section-eyebrow"><i class="fa-solid fa-table-list"></i> Academic Records</p>
+            <h2>Modern record overview</h2>
+            <p class="muted">Search, filter, and sort the existing academic dataset without changing backend behavior.</p>
+        </div>
+        <div class="inline-actions">
+            {% if current_role == 'faculty' %}
+            <a class="button button-ghost button-sm" href="{{ url_for('add_record') }}">
+                <i class="fa-solid fa-plus"></i>
+                Add Academic Record
+            </a>
+            {% endif %}
+            <a class="button button-ghost button-sm" href="{{ url_for('blockchain') }}#verification-panel">
+                <i class="fa-solid fa-circle-check"></i>
+                Verification
+            </a>
+        </div>
+    </div>
+
+    {% if records %}
+    <div class="toolbar">
+        <div class="field">
+            <label for="record-search">Search</label>
+            <input id="record-search" type="search" placeholder="Search by student, course, semester, grade..." data-record-search>
+        </div>
+        <div class="field">
+            <label for="record-filter">Filter grade</label>
+            <select id="record-filter" data-record-filter>
+                <option value="">All grades</option>
+                {% for g in ['O', 'A+', 'A', 'B+', 'B', 'C', 'P', 'F'] %}
+                <option value="{{ g }}">{{ g }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="field">
+            <label for="record-sort">Sort by</label>
+            <select id="record-sort" data-record-sort>
+                <option value="recent">Most recent</option>
+                <option value="marks">Highest marks</option>
+                <option value="attendance">Highest attendance</option>
+                <option value="course">Course code</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    {% if current_role == 'faculty' %}<th>Student</th>{% endif %}
+                    <th>Course</th>
+                    <th>Semester</th>
+                    <th>Academic Year</th>
+                    <th>Marks</th>
+                    <th>Attendance</th>
+                    <th>Grade</th>
+                    <th>Last Updated</th>
+                    <th>Verification Status</th>
+                    {% if current_role == 'faculty' %}<th>Action</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+            {% for r in records %}
+                {% set grade_class = 'badge-grade-a' if r.grade in ['O', 'A+', 'A'] else ('badge-grade-b' if r.grade in ['B+', 'B'] else ('badge-grade-c' if r.grade in ['C', 'P'] else 'badge-grade-f')) %}
+                <tr
+                    data-record-row
+                    data-index="{{ records|length - loop.index0 }}"
+                    data-grade="{{ r.grade }}"
+                    data-marks="{{ r.marks }}"
+                    data-attendance="{{ r.attendance }}"
+                    data-course="{{ r.courses.code if r.courses else r.course_id }}"
+                    data-search="{{ (r.profiles.name if current_role == 'faculty' and r.profiles else current_name)|default('', true) }} {{ r.profiles.email if current_role == 'faculty' and r.profiles else '' }} {{ r.courses.code if r.courses else r.course_id }} {{ r.courses.name if r.courses else '' }} {{ r.semester }} {{ r.academic_year }} {{ r.grade }}"
+                >
+                    {% if current_role == 'faculty' %}
+                    <td data-label="Student">
+                        <div>
+                            <div class="table-primary">{{ r.profiles.name if r.profiles else r.student_id }}</div>
+                            <div class="table-secondary">{{ r.profiles.email if r.profiles else 'Student profile' }}</div>
+                        </div>
+                    </td>
+                    {% endif %}
+                    <td data-label="Course">
+                        <div>
+                            <div class="table-primary">{{ r.courses.code if r.courses else r.course_id }}</div>
+                            <div class="table-secondary">{{ r.courses.name if r.courses else 'Course information available' }}</div>
+                        </div>
+                    </td>
+                    <td data-label="Semester">{{ r.semester }}</td>
+                    <td data-label="Academic Year">{{ r.academic_year }}</td>
+                    <td data-label="Marks">{{ r.marks }}</td>
+                    <td data-label="Attendance">{{ r.attendance }}%</td>
+                    <td data-label="Grade"><span class="badge {{ grade_class }}">{{ r.grade }}</span></td>
+                    <td data-label="Last Updated">{{ r.updated_at or r.created_at or 'Recently' }}</td>
+                    <td data-label="Verification Status"><span class="status-badge status-pending" data-record-status>Checking</span></td>
+                    {% if current_role == 'faculty' %}
+                    <td data-label="Action">
+                        <a class="button button-ghost button-sm" href="{{ url_for('edit_record', record_id=r.id) }}">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                            Edit
+                        </a>
+                    </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <i class="fa-solid fa-file-circle-xmark"></i>
+        <h3>No academic records yet</h3>
+        <p>Records will appear here once they are created in the existing system.</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

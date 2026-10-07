@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}Blockchain{% endblock %}
+{% block content %}
+<section class="blockchain-hero">
+    <div class="card highlight-panel">
+        <p class="eyebrow"><i class="fa-solid fa-cubes-stacked"></i> Integrity Layer</p>
+        <h1>Academic Blockchain</h1>
+        <p class="page-subtitle">Visualize blockchain blocks, validator activity, hashes, and live verification results for your final project demonstration.</p>
+        <div class="hero-actions">
+            <button class="button" type="button" data-verify-chain>
+                <i class="fa-solid fa-shield-halved"></i>
+                Verify Blockchain
+            </button>
+            <a class="button button-ghost" href="#verification-panel">
+                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                Open Verification
+            </a>
+        </div>
+    </div>
+
+    <div class="card verification-summary">
+        <span class="status-pill {{ 'ok' if valid else 'bad' }}" data-verify-status>
+            {% if valid %}
+            <i class="fa-solid fa-circle-check"></i> Blockchain Verified
+            {% else %}
+            <i class="fa-solid fa-triangle-exclamation"></i> Integrity Check Required
+            {% endif %}
+        </span>
+        <h2>{{ 'All blocks are cryptographically valid.' if valid else 'One or more blocks may have been modified.' }}</h2>
+        <p class="muted" data-verify-message>{{ message }}</p>
+        <div class="verification-list">
+            <div class="verification-item">
+                <strong>Chain Integrity</strong>
+                <span class="verification-state {{ 'status-ok' if valid else 'status-bad' }}" data-verify-item>{{ 'Valid' if valid else 'Review' }}</span>
+            </div>
+            <div class="verification-item">
+                <strong>Digital Signature Layer</strong>
+                <span class="verification-state {{ 'status-ok' if valid else 'status-bad' }}" data-verify-item>{{ 'Valid' if valid else 'Review' }}</span>
+            </div>
+            <div class="verification-item">
+                <strong>Blockchain Anchor</strong>
+                <span class="verification-state {{ 'status-ok' if valid else 'status-bad' }}" data-verify-item>{{ 'Valid' if valid else 'Review' }}</span>
+            </div>
+            <div class="verification-item">
+                <strong>Validator Authority</strong>
+                <span class="verification-state {{ 'status-ok' if valid else 'status-bad' }}" data-verify-item>{{ 'Authorized' if valid else 'Check Required' }}</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="card verification-panel" id="verification-panel">
+    <div class="verification-card">
+        <div class="verification-details">
+            <p class="section-eyebrow"><i class="fa-solid fa-shield"></i> Academic Record Verification</p>
+            <h2>Verification interface</h2>
+            <p class="muted">Use this section during your demonstration to show how blockchain validation and record traceability are surfaced through the existing verification endpoint.</p>
+            <div class="field">
+                <label for="verification-search">Record ID / Search</label>
+                <input id="verification-search" type="search" placeholder="Search a record ID, hash, validator, or block reference" data-chain-search>
+            </div>
+        </div>
+        <div class="security-note">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>The current backend exposes overall blockchain verification through the existing `/api/verify` endpoint, which is reflected here as a polished presentation layer.</div>
+        </div>
+    </div>
+</section>
+
+{% if blocks %}
+<section class="blockchain-timeline">
+    {% for b in blocks %}
+    <article
+        class="card block-card"
+        data-block-card
+        data-search="{{ b.block_number }} {{ b.timestamp }} {{ b.validator_id }} {{ b.previous_hash }} {{ b.transaction_hash }} {{ b.block_hash }} {{ b.transaction_data | tojson }}"
+    >
+        <div class="block-head">
+            <div>
+                <p class="section-eyebrow"><i class="fa-solid fa-cube"></i> Blockchain Block</p>
+                <h2>{% if b.block_number == 0 %}Genesis Block{% else %}Block #{{ b.block_number }}{% endif %}</h2>
+            </div>
+            <span class="status-badge {{ 'status-ok' if valid else 'status-bad' }}">{{ 'Valid' if valid else 'Check' }}</span>
+        </div>
+
+        <div class="block-meta">
+            <div class="meta-item">
+                <span>Timestamp</span>
+                <strong>{{ b.timestamp }}</strong>
+            </div>
+            <div class="meta-item">
+                <span>Validator</span>
+                <strong>{{ b.validator_id }}</strong>
+            </div>
+        </div>
+
+        <div class="panel-grid">
+            <div class="field-stack">
+                <label>Transaction Hash</label>
+                <code>{{ b.transaction_hash }}</code>
+            </div>
+            <div class="field-stack">
+                <label>Previous Hash</label>
+                <code>{{ b.previous_hash }}</code>
+            </div>
+            <div class="field-stack">
+                <label>Block Hash</label>
+                <code>{{ b.block_hash }}</code>
+            </div>
+            <div class="field-stack">
+                <label>Signature</label>
+                <code>{{ b.signature or 'Signature stored in chain validation data' }}</code>
+            </div>
+        </div>
+
+        <details>
+            <summary>View transaction data</summary>
+            <pre>{{ b.transaction_data | tojson(indent=2) }}</pre>
+        </details>
+    </article>
+    {% endfor %}
+</section>
+{% else %}
+<div class="empty-state">
+    <i class="fa-solid fa-cubes"></i>
+    <h3>No blocks available</h3>
+    <p>The blockchain view will populate when records are anchored through the existing backend process.</p>
+</div>
+{% endif %}
+{% endblock %}

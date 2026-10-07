@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+{% block content %}
+<section class="auth-shell">
+    <div class="auth-grid">
+        <div class="auth-panel">
+            <p class="eyebrow"><i class="fa-solid fa-user-plus"></i> Secure Registration</p>
+            <h1>Create your academic identity</h1>
+            <p class="lead">Register as a student or faculty member and access a modern platform for secure academic record management.</p>
+
+            <div class="auth-feature-list">
+                <div class="auth-feature">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <div>
+                        <strong>Student portal access</strong>
+                        <div class="lead">View academic records, integrity status, and blockchain-backed history.</div>
+                    </div>
+                </div>
+                <div class="auth-feature">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                    <div>
+                        <strong>Faculty validator access</strong>
+                        <div class="lead">Manage courses and securely anchor updates to the blockchain.</div>
+                    </div>
+                </div>
+                <div class="auth-feature">
+                    <i class="fa-solid fa-key"></i>
+                    <div>
+                        <strong>Protected academic data</strong>
+                        <div class="lead">Your academic data is protected using cryptographic verification and role-based authorization.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-card auth-form">
+            <p class="section-eyebrow"><i class="fa-solid fa-address-card"></i> Registration</p>
+            <h2>Create account</h2>
+            <p class="muted">Complete the form below to create your secure academic profile.</p>
+
+            <form method="post" class="form-stack">
+                <div class="field-stack">
+                    <label for="name">Full name</label>
+                    <input id="name" name="name" placeholder="Enter your full name" required>
+                </div>
+
+                <div class="field-stack">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" name="email" placeholder="name@example.com" required>
+                </div>
+
+                <div class="field-stack">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" name="password" minlength="6" placeholder="Minimum 6 characters" required>
+                </div>
+
+                <div class="field-stack">
+                    <label for="role">Role</label>
+                    <select id="role" name="role" required>
+                        <option value="student">Student</option>
+                        <option value="faculty">Faculty</option>
+                    </select>
+                </div>
+
+                <div class="field-stack">
+                    <label for="department">Department</label>
+                    <input id="department" name="department" placeholder="EEE / CSE">
+                </div>
+
+                <div class="security-note">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <div>Faculty accounts are automatically registered as PoA validator nodes for this academic demo.</div>
+                </div>
+
+                <button class="button" type="submit">
+                    <i class="fa-solid fa-user-plus"></i>
+                    Register
+                </button>
+            </form>
+
+            <p class="form-footer">Already have an account? <a href="{{ url_for('login') }}">Login here</a>.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}

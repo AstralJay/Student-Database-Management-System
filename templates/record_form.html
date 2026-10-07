@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if edit_mode else 'Add' }} Academic Record{% endblock %}
+{% block content %}
+<div class="form-card wide">
+    <div class="form-intro">
+        <div>
+            <p class="section-eyebrow"><i class="fa-solid fa-file-shield"></i> Secure Record Form</p>
+            <h1>{{ 'Edit' if edit_mode else 'Add' }} Academic Record</h1>
+            <p class="muted">Complete the academic details below. The existing backend will continue to handle validation, anchoring, and blockchain integrity logic.</p>
+        </div>
+        <div class="security-note">
+            <i class="fa-solid fa-lock"></i>
+            <div>This submission will follow the current secure academic workflow and preserve all backend behavior.</div>
+        </div>
+    </div>
+
+    <form method="post">
+        <div class="form-grid">
+            <section class="form-section">
+                <h3>Student Information</h3>
+                <p>Select the learner profile associated with this academic entry.</p>
+                {% if not edit_mode %}
+                <div class="field-stack">
+                    <label for="student_id">Student</label>
+                    <select id="student_id" name="student_id" required>
+                        {% for s in students %}
+                        <option value="{{ s.id }}">{{ s.name }} — {{ s.email }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% else %}
+                <div class="section-note">
+                    Student assignment is preserved for existing records during edit mode.
+                </div>
+                {% endif %}
+            </section>
+
+            <section class="form-section">
+                <h3>Course Information</h3>
+                <p>Choose the academic course context for this record.</p>
+                {% if not edit_mode %}
+                <div class="field-stack">
+                    <label for="course_id">Course</label>
+                    <select id="course_id" name="course_id" required>
+                        {% for c in courses %}
+                        <option value="{{ c.id }}">{{ c.code }} — {{ c.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% else %}
+                <div class="section-note">
+                    Course mapping remains unchanged while editing an existing record.
+                </div>
+                {% endif %}
+            </section>
+
+            <section class="form-section">
+                <h3>Academic Context</h3>
+                <p>Provide semester and year details for the current academic record.</p>
+                <div class="field-stack">
+                    <label for="semester">Semester</label>
+                    <input id="semester" name="semester" placeholder="S5" value="{{ record.semester if record else '' }}" required>
+                </div>
+                <div class="field-stack">
+                    <label for="academic_year">Academic Year</label>
+                    <input id="academic_year" name="academic_year" placeholder="2026-27" value="{{ record.academic_year if record else '' }}" required>
+                </div>
+            </section>
+
+            <section class="form-section">
+                <h3>Academic Performance</h3>
+                <p>Enter marks, attendance, and grade details using the existing record workflow.</p>
+                <div class="field-stack">
+                    <label for="marks">Marks</label>
+                    <input id="marks" type="number" min="0" max="100" name="marks" value="{{ record.marks if record else '' }}" required>
+                </div>
+                <div class="field-stack">
+                    <label for="attendance">Attendance (%)</label>
+                    <input id="attendance" type="number" min="0" max="100" step="0.01" name="attendance" value="{{ record.attendance if record else '' }}" required>
+                </div>
+                <div class="field-stack">
+                    <label for="grade">Grade</label>
+                    <select id="grade" name="grade" required>
+                        {% for g in ['O','A+','A','B+','B','C','P','F'] %}
+                        <option value="{{ g }}" {% if record and record.grade == g %}selected{% endif %}>{{ g }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </section>
+        </div>
+
+        <div class="form-actions">
+            <div class="security-note">
+                <i class="fa-solid fa-link"></i>
+                <div>{{ 'Updating this record will preserve the existing secure blockchain anchoring workflow.' if edit_mode else 'This record will be securely stored and anchored using the existing blockchain process.' }}</div>
+            </div>
+
+            <button class="button" type="submit">
+                <i class="fa-solid fa-shield-halved"></i>
+                {{ 'Securely Update Academic Record' if edit_mode else 'Securely Add Academic Record' }}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

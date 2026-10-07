@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}AcademicChain{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero-panel">
+        <p class="eyebrow"><i class="fa-solid fa-graduation-cap"></i> Academic + FinTech + Web3</p>
+        <h1>Blockchain-Based Academic Database</h1>
+        <p class="lead">Secure, verifiable and tamper-evident academic records powered by blockchain technology.</p>
+        <div class="hero-actions">
+            <a class="button button-light" href="{{ url_for('dashboard') if current_user else url_for('register') }}">
+                <i class="fa-solid fa-rocket"></i>
+                Get Started
+            </a>
+            <a class="button button-secondary" href="{{ url_for('blockchain') if current_user else url_for('login') }}">
+                <i class="fa-solid fa-link"></i>
+                Explore Blockchain
+            </a>
+        </div>
+        <div class="hero-mini-grid">
+            <div class="surface-card mini-metric glass-card">
+                <strong>SHA-256</strong>
+                <span class="muted">Tamper-evident hashing for academic records</span>
+            </div>
+            <div class="surface-card mini-metric glass-card">
+                <strong>PoA</strong>
+                <span class="muted">Authority-based validation for trusted approvals</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-side">
+        <div class="card architecture-card">
+            <p class="section-eyebrow"><i class="fa-solid fa-diagram-project"></i> System Architecture</p>
+            <h2>Academic integrity flow</h2>
+            <ol class="architecture-flow">
+                <li class="flow-step">
+                    <i class="fa-solid fa-users"></i>
+                    <div>
+                        <strong>Student / Faculty</strong>
+                        <div class="muted">Authenticated academic actors</div>
+                    </div>
+                </li>
+                <li class="flow-arrow"><i class="fa-solid fa-arrow-down"></i></li>
+                <li class="flow-step">
+                    <i class="fa-solid fa-file-signature"></i>
+                    <div>
+                        <strong>Academic Record</strong>
+                        <div class="muted">Course, marks, attendance and grading data</div>
+                    </div>
+                </li>
+                <li class="flow-arrow"><i class="fa-solid fa-arrow-down"></i></li>
+                <li class="flow-step">
+                    <i class="fa-solid fa-fingerprint"></i>
+                    <div>
+                        <strong>Cryptographic Hash</strong>
+                        <div class="muted">SHA-256 digest generation and signing</div>
+                    </div>
+                </li>
+                <li class="flow-arrow"><i class="fa-solid fa-arrow-down"></i></li>
+                <li class="flow-step">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    <div>
+                        <strong>PoA Validation</strong>
+                        <div class="muted">Authorized validators approve updates</div>
+                    </div>
+                </li>
+                <li class="flow-arrow"><i class="fa-solid fa-arrow-down"></i></li>
+                <li class="flow-step">
+                    <i class="fa-solid fa-cubes"></i>
+                    <div>
+                        <strong>Blockchain</strong>
+                        <div class="muted">Immutable chain of academic transactions</div>
+                    </div>
+                </li>
+                <li class="flow-arrow"><i class="fa-solid fa-arrow-down"></i></li>
+                <li class="flow-step">
+                    <i class="fa-solid fa-database"></i>
+                    <div>
+                        <strong>Secure Academic Database</strong>
+                        <div class="muted">Verifiable academic data in Supabase</div>
+                    </div>
+                </li>
+            </ol>
+        </div>
+
+        <div class="surface-card">
+            <p class="section-eyebrow"><i class="fa-solid fa-lock"></i> Demonstration Ready</p>
+            <h2>Built for a polished project presentation</h2>
+            <p class="muted">A modern university technology interface designed to showcase security, authority-based validation, and academic record integrity without changing your backend behavior.</p>
+        </div>
+    </div>
+</section>
+
+<section class="feature-grid">
+    <article class="card feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+        <h3>Secure Records</h3>
+        <p class="muted">SHA-256 hashing and RSA digital signatures protect each academic entry.</p>
+    </article>
+    <article class="card feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-user-check"></i></div>
+        <h3>Proof of Authority</h3>
+        <p class="muted">Authorized validator accounts approve the academic ledger workflow.</p>
+    </article>
+    <article class="card feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3>Tamper Detection</h3>
+        <p class="muted">Blockchain hashes help expose unauthorized modifications quickly.</p>
+    </article>
+    <article class="card feature-card">
+        <div class="feature-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <h3>Verifiable History</h3>
+        <p class="muted">Academic updates remain auditable through chained transaction history.</p>
+    </article>
+</section>
+{% endblock %}
